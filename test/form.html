@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Manual Test Job Application Form</title>
+  </head>
+  <body>
+    <main>
+      <h1>Manual Test Job Application Form</h1>
+      <p>This local page is for manual Chrome Extension testing only. Use fake profile data.</p>
+
+      <form action="#" method="post">
+        <fieldset>
+          <legend>Personal details</legend>
+
+          <p>
+            <label for="first-name">First name / Vorname</label><br>
+            <input id="first-name" name="firstName" autocomplete="given-name">
+          </p>
+
+          <p>
+            <label for="last-name">Last name / Nachname</label><br>
+            <input id="last-name" name="lastName" autocomplete="family-name">
+          </p>
+
+          <p>
+            <label for="email">Email / E-Mail</label><br>
+            <input id="email" name="email" type="email" autocomplete="email">
+          </p>
+
+          <p>
+            <label for="phone">Phone / Telefonnummer</label><br>
+            <input id="phone" name="phone" type="tel" autocomplete="tel">
+          </p>
+
+          <p>
+            <label for="city">City / Stadt</label><br>
+            <input id="city" name="city" autocomplete="address-level2">
+          </p>
+
+          <p>
+            <label for="country">Country / Land</label><br>
+            <input id="country" name="country" autocomplete="country-name">
+          </p>
+
+          <p>
+            <label for="linkedin">LinkedIn profile</label><br>
+            <input id="linkedin" name="linkedinProfile" type="url" placeholder="LinkedIn profile URL">
+          </p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Education and language skills</legend>
+
+          <p>
+            <label for="highest-degree">Highest degree / Abschluss</label><br>
+            <select id="highest-degree" name="highestDegree">
+              <option value="">Select one</option>
+              <option value="Bachelor's degree">Bachelor's degree</option>
+              <option value="Master's degree">Master's degree</option>
+              <option value="Doctorate">Doctorate</option>
+            </select>
+          </p>
+
+          <p>
+            <label for="field-of-study">Field of study / Studienfach</label><br>
+            <input id="field-of-study" name="fieldOfStudy" placeholder="Computational Engineering">
+          </p>
+
+          <p>
+            <label for="german-level">German level / Deutschkenntnisse</label><br>
+            <select id="german-level" name="germanLevel">
+              <option value="">Select one</option>
+              <option value="A1">A1</option>
+              <option value="A2">A2</option>
+              <option value="B1">B1</option>
+              <option value="B2">B2</option>
+              <option value="C1">C1</option>
+              <option value="C2">C2</option>
+            </select>
+          </p>
+
+          <p>
+            <label for="english-level">English level / Englischkenntnisse</label><br>
+            <select id="english-level" name="englishLevel">
+              <option value="">Select one</option>
+              <option value="A1">A1</option>
+              <option value="A2">A2</option>
+              <option value="B1">B1</option>
+              <option value="B2">B2</option>
+              <option value="C1">C1</option>
+              <option value="C2">C2</option>
+            </select>
+          </p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Application details</legend>
+
+          <p>
+            <label for="availability-date">Availability date / Eintrittsdatum</label><br>
+            <input id="availability-date" name="availabilityDate" type="date">
+          </p>
+
+          <p>
+            <label for="work-authorization">Work authorization / Arbeitserlaubnis</label><br>
+            <select id="work-authorization" name="workAuthorization">
+              <option value="">Select one</option>
+              <option value="Eligible to work in Germany">Eligible to work in Germany</option>
+              <option value="EU Blue Card">EU Blue Card</option>
+              <option value="Work permit required">Work permit required</option>
+            </select>
+          </p>
+
+          <p>
+            <span>Visa sponsorship</span><br>
+            <label>
+              <input type="radio" name="requiresSponsorship" value="yes">
+              Yes, I require visa sponsorship
+            </label><br>
+            <label>
+              <input type="radio" name="requiresSponsorship" value="no">
+              No, I do not require visa sponsorship
+            </label>
+          </p>
+
+          <p>
+            <label>
+              <input id="sponsorship-checkbox" name="visaSponsorship" type="checkbox" value="yes">
+              Visa sponsorship required
+            </label>
+          </p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Review</legend>
+          <p>
+            <label for="notes">Additional notes</label><br>
+            <textarea id="notes" name="notes" rows="5" cols="50"></textarea>
+          </p>
+        </fieldset>
+
+        <p>
+          <button type="submit">Submit application manually</button>
+        </p>
+      </form>
+    </main>
+  </body>
+</html>

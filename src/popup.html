@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Job Application Autofill</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        margin: 0;
+        min-width: 300px;
+        background: #f7f8fa;
+        color: #151922;
+      }
+
+      main {
+        padding: 14px;
+      }
+
+      h1 {
+        margin: 0 0 12px;
+        font-size: 18px;
+        line-height: 1.25;
+      }
+
+      .actions {
+        display: grid;
+        gap: 8px;
+      }
+
+      button {
+        width: 100%;
+        border: 1px solid #c9d0dc;
+        border-radius: 6px;
+        background: #ffffff;
+        color: #151922;
+        cursor: pointer;
+        font-size: 14px;
+        padding: 9px 10px;
+        text-align: left;
+      }
+
+      button:hover {
+        background: #eef3fb;
+      }
+
+      button.primary {
+        background: #1f6feb;
+        border-color: #1f6feb;
+        color: #ffffff;
+      }
+
+      #status {
+        margin-top: 12px;
+        max-height: 220px;
+        overflow: auto;
+        border: 1px solid #d6dce6;
+        border-radius: 6px;
+        background: #ffffff;
+        padding: 10px;
+        white-space: pre-wrap;
+        font-size: 12px;
+        line-height: 1.45;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Job Application Autofill</h1>
+      <div class="actions">
+        <button id="fillPage" class="primary" type="button">Fill current page</button>
+        <button id="showDetected" type="button">Show detected fields</button>
+        <button id="openProfile" type="button">Open profile</button>
+        <button id="openDashboard" type="button">Open dashboard</button>
+      </div>
+      <pre id="status" aria-live="polite">Ready.</pre>
+    </main>
+    <script src="storage.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>
+

@@ -1,0 +1,21 @@
+# Personal data
+profile.json
+*.pdf
+*.docx
+*.tex
+personal/
+secrets/
+.env
+.env.local
+
+# Generated / build
+dist/
+build/
+node_modules/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
