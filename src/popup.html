@@ -62,9 +62,103 @@
         border-radius: 6px;
         background: #ffffff;
         padding: 10px;
-        white-space: pre-wrap;
         font-size: 12px;
         line-height: 1.45;
+      }
+
+      .status-message {
+        color: #4c5666;
+      }
+
+      .result-title {
+        margin: 0 0 8px;
+        font-size: 13px;
+      }
+
+      .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+        margin-bottom: 10px;
+      }
+
+      .summary-item {
+        border: 1px solid #e3e7ef;
+        border-radius: 6px;
+        padding: 6px;
+      }
+
+      .summary-label {
+        display: block;
+        color: #4c5666;
+        font-size: 11px;
+      }
+
+      .summary-value {
+        display: block;
+        color: #151922;
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      .field-list {
+        display: grid;
+        gap: 8px;
+      }
+
+      .field-row {
+        border-top: 1px solid #e3e7ef;
+        padding-top: 8px;
+      }
+
+      .field-row:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+
+      .field-header {
+        align-items: start;
+        display: flex;
+        gap: 8px;
+        justify-content: space-between;
+      }
+
+      .field-name {
+        font-weight: 700;
+        min-width: 0;
+      }
+
+      .field-status {
+        border-radius: 999px;
+        color: #1f2937;
+        background: #eef3fb;
+        flex: 0 1 auto;
+        font-size: 11px;
+        max-width: 140px;
+        overflow-wrap: anywhere;
+        padding: 2px 6px;
+        text-align: right;
+      }
+
+      .field-status.filled,
+      .field-status.fillable {
+        background: #e7f6ec;
+        color: #155724;
+      }
+
+      .field-status.skipped {
+        background: #fff4de;
+        color: #7a4b00;
+      }
+
+      .field-detail {
+        color: #4c5666;
+        margin-top: 3px;
+      }
+
+      .field-label {
+        color: #151922;
+        overflow-wrap: anywhere;
       }
     </style>
   </head>
@@ -77,10 +171,11 @@
         <button id="openProfile" type="button">Open profile</button>
         <button id="openDashboard" type="button">Open dashboard</button>
       </div>
-      <pre id="status" aria-live="polite">Ready.</pre>
+      <div id="status" aria-live="polite">
+        <div class="status-message">Ready.</div>
+      </div>
     </main>
     <script src="storage.js"></script>
     <script src="popup.js"></script>
   </body>
 </html>
-

@@ -6,8 +6,153 @@
 
   const statusElement = document.getElementById("status");
 
+  const PROFILE_FIELD_LABELS = {
+    firstName: "First name",
+    lastName: "Last name",
+    email: "Email",
+    phone: "Phone",
+    city: "City",
+    country: "Country",
+    linkedin: "LinkedIn",
+    highestDegree: "Highest degree",
+    fieldOfStudy: "Field of study",
+    germanLevel: "German level",
+    englishLevel: "English level",
+    availabilityDate: "Availability date",
+    workAuthorization: "Work authorization",
+    requiresSponsorship: "Visa sponsorship"
+  };
+
+  function replaceStatus(...nodes) {
+    statusElement.replaceChildren(...nodes);
+  }
+
+  function createElement(tagName, className, text) {
+    const element = document.createElement(tagName);
+
+    if (className) {
+      element.className = className;
+    }
+
+    if (text !== undefined) {
+      element.textContent = text;
+    }
+
+    return element;
+  }
+
   function setStatus(message) {
-    statusElement.textContent = message;
+    replaceStatus(createElement("div", "status-message", message));
+  }
+
+  function formatProfileField(profileField) {
+    return PROFILE_FIELD_LABELS[profileField] || profileField || "Unmapped field";
+  }
+
+  function formatElementType(mapping) {
+    if (!mapping) {
+      return "";
+    }
+
+    return `${mapping.tagName || "field"}${mapping.inputType ? `:${mapping.inputType}` : ""}`;
+  }
+
+  function formatConfidence(confidence) {
+    return `${Math.round(Number(confidence || 0) * 100)}%`;
+  }
+
+  function normalizeStatus(mapping) {
+    if (mapping.status) {
+      return mapping.status;
+    }
+
+    if (mapping.action === "filled") {
+      return "filled";
+    }
+
+    if (mapping.reason === "field already has a value") {
+      return "skipped: already has value";
+    }
+
+    if (mapping.reason === "profile value is empty") {
+      return "skipped: no profile value";
+    }
+
+    if (mapping.reason) {
+      return `skipped: ${mapping.reason}`;
+    }
+
+    return "fillable";
+  }
+
+  function getStatusClass(status) {
+    if (status === "filled") {
+      return "field-status filled";
+    }
+
+    if (status === "fillable") {
+      return "field-status fillable";
+    }
+
+    return "field-status skipped";
+  }
+
+  function createSummaryItem(label, value) {
+    const item = createElement("div", "summary-item");
+    item.append(
+      createElement("span", "summary-label", label),
+      createElement("span", "summary-value", String(value))
+    );
+    return item;
+  }
+
+  function createSummaryGrid(result) {
+    const mappedFieldCount = result.mappedFieldCount ?? (Array.isArray(result.mappings) ? result.mappings.length : 0);
+    const grid = createElement("div", "summary-grid");
+
+    grid.append(
+      createSummaryItem("Detected", result.detectedFieldCount || 0),
+      createSummaryItem("Mapped", mappedFieldCount),
+      createSummaryItem("Filled", result.filledFieldCount || 0),
+      createSummaryItem("Skipped", result.skippedFieldCount || 0)
+    );
+
+    return grid;
+  }
+
+  function createFieldRow(mapping) {
+    const status = normalizeStatus(mapping);
+    const row = createElement("div", "field-row");
+    const header = createElement("div", "field-header");
+
+    header.append(
+      createElement("div", "field-name", formatProfileField(mapping.profileField)),
+      createElement("div", getStatusClass(status), status)
+    );
+
+    row.append(
+      header,
+      createElement("div", "field-detail field-label", mapping.label || "No visible label detected"),
+      createElement("div", "field-detail", `Element: ${formatElementType(mapping)}`),
+      createElement("div", "field-detail", `Confidence: ${formatConfidence(mapping.confidence)}`)
+    );
+
+    return row;
+  }
+
+  function renderResult(title, result) {
+    const mappings = Array.isArray(result && result.mappings) ? result.mappings : [];
+    const titleElement = createElement("h2", "result-title", title);
+    const summaryGrid = createSummaryGrid(result || {});
+
+    if (mappings.length === 0) {
+      replaceStatus(titleElement, summaryGrid, createElement("div", "status-message", "No confident mappings detected."));
+      return;
+    }
+
+    const fieldList = createElement("div", "field-list");
+    fieldList.append(...mappings.map(createFieldRow));
+    replaceStatus(titleElement, summaryGrid, fieldList);
   }
 
   async function getActiveTab() {
@@ -20,20 +165,6 @@
       target: { tabId },
       files
     });
-  }
-
-  function summarizeMappings(result) {
-    if (!result || !Array.isArray(result.mappings) || result.mappings.length === 0) {
-      return "No confident mappings detected.";
-    }
-
-    return result.mappings
-      .map((mapping) => {
-        const action = mapping.action ? ` | ${mapping.action}` : "";
-        const reason = mapping.reason ? ` | ${mapping.reason}` : "";
-        return `- ${mapping.profileField} (${mapping.tagName}${mapping.inputType ? `:${mapping.inputType}` : ""}, ${mapping.confidence})${action}${reason}`;
-      })
-      .join("\n");
   }
 
   async function fillCurrentPage() {
@@ -64,15 +195,10 @@
       });
 
       const result = executionResult.result;
-      setStatus(
-        [
-          `Detected fields: ${result.detectedFieldCount}`,
-          `Filled fields: ${result.filledFieldCount}`,
-          `Skipped fields: ${result.skippedFieldCount}`,
-          "",
-          summarizeMappings(result)
-        ].join("\n")
-      );
+      renderResult("Autofill result", {
+        ...result,
+        mappedFieldCount: Array.isArray(result.mappings) ? result.mappings.length : 0
+      });
     } catch (error) {
       setStatus(`Autofill failed: ${error.message}`);
     }
@@ -88,21 +214,77 @@
         return;
       }
 
+      const profile = await JobApplicationStorage.getProfile();
+
       await injectScripts(tab.id, DETECTOR_SCRIPT_FILES);
       const [executionResult] = await chrome.scripting.executeScript({
         target: { tabId: tab.id },
-        func: () => globalThis.JobApplicationFieldDetector.inspect()
+        func: (currentProfile) => {
+          const detector = globalThis.JobApplicationFieldDetector;
+          const detections = detector.detectFields(document);
+
+          function hasProfileValue(profileField) {
+            const value = currentProfile[profileField];
+            return typeof value === "boolean" || (value !== null && value !== undefined && String(value).trim() !== "");
+          }
+
+          function fieldHasValue(element) {
+            const tagName = element.tagName.toLowerCase();
+            const inputType = detector.normalizeText(element.getAttribute("type") || element.type || "");
+
+            if (inputType === "checkbox") {
+              return element.checked;
+            }
+
+            if (inputType === "radio") {
+              if (!element.name) {
+                return element.checked;
+              }
+
+              return Array.from(document.querySelectorAll('input[type="radio"]'))
+                .filter((radio) => radio.name === element.name)
+                .some((radio) => radio.checked);
+            }
+
+            if (tagName === "select") {
+              return element.value !== "";
+            }
+
+            return String(element.value || "").trim() !== "";
+          }
+
+          const mappings = detections
+            .filter((detection) => detection.profileField)
+            .map((detection) => {
+              const hasProfile = hasProfileValue(detection.profileField);
+              const hasCurrentValue = fieldHasValue(detection.element);
+              let status = "fillable";
+
+              if (!hasProfile) {
+                status = "skipped: no profile value";
+              } else if (hasCurrentValue) {
+                status = "skipped: already has value";
+              }
+
+              return {
+                ...detector.serializeDetection(detection),
+                status
+              };
+            });
+
+          return {
+            detectedFieldCount: detections.length,
+            mappedFieldCount: mappings.length,
+            filledFieldCount: 0,
+            skippedFieldCount: mappings.filter((mapping) => mapping.status !== "fillable").length,
+            mappings
+          };
+        },
+        args: [profile]
       });
 
       const result = executionResult.result;
-      setStatus(
-        [
-          `Detected fields: ${result.detectedFieldCount}`,
-          `Mapped fields: ${result.mappedFieldCount}`,
-          "",
-          summarizeMappings(result)
-        ].join("\n")
-      );
+      renderResult("Detected fields", result);
     } catch (error) {
       setStatus(`Field detection failed: ${error.message}`);
     }
@@ -133,4 +315,3 @@
   document.getElementById("openProfile").addEventListener("click", openProfile);
   document.getElementById("openDashboard").addEventListener("click", openDashboard);
 })();
-
