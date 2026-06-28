@@ -1,48 +1,62 @@
 # Job Application Autofill Extension
 
-A privacy-first local Chrome Extension for autofilling repetitive job application forms.
+A privacy-first local Chrome Extension for autofilling repetitive job application forms after explicit user action.
 
-The extension detects common form fields on job application pages and fills them with locally stored profile data after explicit user action. It is designed for manual review before submission and does not submit applications automatically.
+The extension detects common job application form fields, maps them to locally stored profile data, and helps users fill repetitive fields while keeping final review and submission fully manual.
 
-## Key Features
+## Why This Project
+
+Job application platforms often ask for the same contact, education, language, and work authorization details repeatedly. This project reduces that manual input without turning the process into a black-box automation system.
+
+The core design choice is local-first and review-first: profile data stays in Chrome local storage, autofill runs only after the user clicks a popup button, and the extension never submits applications automatically.
+
+## Features
 
 - User-triggered autofill from the extension popup
 - Local profile storage with `chrome.storage.local`
-- DOM-based field detection for common English and German labels
-- Support for `input`, `textarea`, `select`, `radio`, and `checkbox` controls
+- Field detection for English and German form labels
+- Readable detected-field output with labels, element types, confidence, and status
 - Local application dashboard for manual tracking
-- No Gmail access
-- No analytics
+- Manual test page and checklist
+- No auto-submit
+- No Gmail integration
 - No external API calls
-- No automatic application submission
+
+## Screenshots
+
+Screenshots should use fake data only and should not show browser address bars, local machine paths, real email addresses, real application records, or real profile details.
+
+**Local profile storage**
+
+![Local profile storage](docs/screenshots/profile.png)
+
+**Autofill result with detected field summary**
+
+![Autofill result with detected field summary](docs/screenshots/autofill-result.png)
+
+**Local application dashboard**
+
+![Local application dashboard](docs/screenshots/dashboard.png)
 
 ## What This Extension Does
 
 - Stores a reusable profile locally in Chrome.
 - Detects likely job application fields from labels, placeholders, names, IDs, ARIA labels, and nearby text.
 - Fills confident matches only after the user clicks `Fill current page`.
-- Shows detected field mappings for manual review.
+- Shows detected field mappings in a readable popup view.
 - Lets the user manually save application records in a local dashboard.
 
-## What This Extension Does Not Do
+## Privacy and Safety Boundaries
 
-- It does not submit applications.
-- It does not bypass logins, CAPTCHA, file upload restrictions, or platform rules.
-- It does not set file input values.
-- It does not connect to Gmail, Google Drive, OpenAI APIs, analytics, or any third-party service.
-- It does not upload profile or application data to external servers.
+- Data is stored locally only with `chrome.storage.local`.
+- No analytics or telemetry.
+- No external APIs.
+- No Gmail, Google Drive, OpenAI, or third-party service access.
+- No automatic application submission.
+- File inputs are never filled programmatically.
+- No broad `host_permissions`; scripts are injected only after explicit user action.
 
-## Privacy-First Design
-
-All profile and dashboard data is stored locally with `chrome.storage.local`. The extension requests only the permissions needed for v0.1:
-
-- `storage`
-- `activeTab`
-- `scripting`
-
-There are no host permissions. Autofill scripts are injected only when the user clicks a popup button.
-
-## Install Locally
+## Installation
 
 1. Open Chrome.
 2. Go to `chrome://extensions`.
@@ -62,17 +76,26 @@ There are no host permissions. Autofill scripts are injected only when the user 
 7. Review the page manually before submitting anything.
 8. Click `Open dashboard` to save the current application page locally.
 
+## Manual Testing
+
+Use the local test page and checklist before testing on real application platforms:
+
+- [Manual test checklist](docs/manual-test-checklist.md)
+- [Local test form](test/form.html)
+
+Manual testing covers profile persistence, detected-field output, autofill behavior, non-overwrite behavior, dashboard storage, and the no-auto-submit boundary.
+
 ## Development Status
 
-Version `0.1.0` is an initial MVP. It focuses on safe local behavior, generic field detection, manual review, and a lightweight local dashboard.
+Version `0.1.0` is an initial MVP. It focuses on safe local behavior, generic field detection, manual review, readable popup output, and a lightweight local dashboard.
 
 ## Roadmap
 
-- Improve confidence scoring with more real-world form examples.
-- Add careful platform-specific hints for Workday, Greenhouse, Lever, Personio, SmartRecruiters, and Ashby.
-- Add import/export for local profile and application records.
-- Add manual test cases for common application platforms.
+- Improve field detection output with more real-world test cases.
+- Add platform-specific adapters for Workday, Greenhouse, Lever, Personio, SmartRecruiters, and Ashby.
+- Add more manual test cases for common form patterns.
 - Improve dashboard filtering and editing.
+- Keep all sensitive automation opt-in and local-first.
 
 ## Project Structure
 
@@ -104,10 +127,14 @@ job-application-autofill-extension/
       personio.js
       smartrecruiters.js
       ashby.js
+  test/
+    form.html
   examples/
     profile.example.json
   docs/
+    manual-test-checklist.md
     screenshots/
-      .gitkeep
+      profile.png
+      autofill-result.png
+      dashboard.png
 ```
-
