@@ -7,7 +7,7 @@ Use fake profile data only. Do not test first on Workday or another real applica
 1. Open `chrome://extensions`.
 2. Enable `Developer mode`.
 3. Click `Load unpacked`.
-4. Select `C:\Users\91535\Documents\job-application-autofill-extension`.
+4. Select `<path-to-repo>\job-application-autofill-extension`.
 5. Open the extension details page and enable `Allow access to file URLs` for local `file://` testing.
 
 ## 2. Open the Local Test Form
@@ -15,7 +15,7 @@ Use fake profile data only. Do not test first on Workday or another real applica
 Open this file in Chrome:
 
 ```text
-C:\Users\91535\Documents\job-application-autofill-extension\test\form.html
+<path-to-repo>\job-application-autofill-extension\test\form.html
 ```
 
 The browser URL should start with `file:///`.
@@ -96,4 +96,3 @@ The browser URL should start with `file:///`.
 ## 9. Check Chrome Console
 
 Open DevTools on the popup, options page, dashboard, and test form when needed. Confirm there are no obvious red runtime errors.
-
