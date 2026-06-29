@@ -96,3 +96,38 @@ The browser URL should start with `file:///`.
 ## 9. Check Chrome Console
 
 Open DevTools on the popup, options page, dashboard, and test form when needed. Confirm there are no obvious red runtime errors.
+
+## 10. German ATS Field Coverage
+
+Open this file in Chrome:
+
+```text
+<path-to-repo>\job-application-autofill-extension\test\german-ats-form.html
+```
+
+Use fake profile values only. In addition to the basic profile fields, save optional values such as:
+
+- phoneCountryCode: `+49`
+- phoneLocalNumber: `0000000000`
+- streetAddress: `Example Street 1`
+- postalCode: `10115`
+- city: `Berlin`
+- country: `Germany`
+- university: `Example University`
+- locationPreference1: `Berlin`
+- locationPreference2: `Munich`
+- travelReadiness: `Yes`
+- salaryExpectation: `60000 EUR`
+- noticePeriodOrStartDate: `2026-10-01`
+
+Then test:
+
+1. Click `Show detected fields`.
+2. Confirm German labels are mapped, including `Vorname`, `Nachname`, `Private E-Mail`, `Ländercode`, `Telefonnummer`, `Straße und Hausnummer`, `Postleitzahl`, `Stadt`, `Standortwahl Priorität 1`, `Deutschkenntnisse`, `Englischkenntnisse`, `Reisebereitschaft`, `Gewünschter Starttermin oder Kündigungsfrist`, and `Erwartetes Jahresgehalt`.
+3. Confirm `Stadt` maps to `city` and is not filled with `Germany`.
+4. Confirm `Lebenslauf` and `Upload der Zeugnisse` show `manual upload required` and file inputs stay empty.
+5. Click `Fill current page`.
+6. Confirm select values such as `Berlin`, `Germany`, `C1`, and `Yes / Ja` are matched case-insensitively.
+7. Confirm sensitive fields such as `Geschlecht`, `Geburtsdatum`, `Nationalität`, `Talent pool consent`, and `Schwerbehinderung / Gleichstellung` are skipped unless you explicitly saved local profile values for them.
+8. Confirm legal or consent radio buttons are not selected by default.
+9. Confirm the submit button is never clicked automatically.

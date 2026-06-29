@@ -6,16 +6,33 @@
     "lastName",
     "email",
     "phone",
+    "phoneCountryCode",
+    "phoneLocalNumber",
+    "streetAddress",
+    "postalCode",
     "city",
     "country",
     "linkedin",
+    "title",
+    "nameSuffix",
     "highestDegree",
     "fieldOfStudy",
+    "university",
     "germanLevel",
     "englishLevel",
     "availabilityDate",
+    "noticePeriodOrStartDate",
     "workAuthorization",
-    "requiresSponsorship"
+    "locationPreference1",
+    "locationPreference2",
+    "travelReadiness",
+    "salaryExpectation",
+    "requiresSponsorship",
+    "birthDate",
+    "gender",
+    "nationality",
+    "talentPoolConsent",
+    "disabilityStatus"
   ];
 
   const form = document.getElementById("profileForm");
@@ -106,4 +123,3 @@
 
   loadProfile().catch((error) => setStatus(`Failed to load profile: ${error.message}`));
 })();
-

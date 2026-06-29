@@ -14,6 +14,10 @@
     lastName: "",
     email: "",
     phone: "",
+    phoneCountryCode: "",
+    phoneLocalNumber: "",
+    streetAddress: "",
+    postalCode: "",
     city: "",
     country: "",
     linkedin: "",
@@ -22,8 +26,21 @@
     germanLevel: "",
     englishLevel: "",
     availabilityDate: "",
+    noticePeriodOrStartDate: "",
     workAuthorization: "",
-    requiresSponsorship: false
+    requiresSponsorship: false,
+    title: "",
+    nameSuffix: "",
+    birthDate: "",
+    gender: "",
+    nationality: "",
+    university: "",
+    locationPreference1: "",
+    locationPreference2: "",
+    travelReadiness: "",
+    salaryExpectation: "",
+    talentPoolConsent: "",
+    disabilityStatus: ""
   });
 
   const DEFAULT_SETTINGS = Object.freeze({
@@ -112,4 +129,3 @@
     saveApplications
   };
 })();
-

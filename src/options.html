@@ -64,7 +64,8 @@
         font-weight: 600;
       }
 
-      input {
+      input,
+      select {
         border: 1px solid #c9d0dc;
         border-radius: 6px;
         font: inherit;
@@ -124,6 +125,10 @@
           <label>Last name<input name="lastName" autocomplete="family-name"></label>
           <label>Email<input name="email" type="email" autocomplete="email"></label>
           <label>Phone<input name="phone" type="tel" autocomplete="tel"></label>
+          <label>Phone country code<input name="phoneCountryCode" type="tel" autocomplete="tel-country-code"></label>
+          <label>Phone local number<input name="phoneLocalNumber" type="tel" autocomplete="tel-national"></label>
+          <label>Street address<input name="streetAddress" autocomplete="street-address"></label>
+          <label>Postal code<input name="postalCode" autocomplete="postal-code"></label>
           <label>City<input name="city" autocomplete="address-level2"></label>
           <label>Country<input name="country" autocomplete="country-name"></label>
           <label>LinkedIn<input name="linkedin" type="url"></label>
@@ -131,13 +136,54 @@
 
         <section>
           <h2>Application Profile</h2>
+          <label>Title<input name="title"></label>
+          <label>Name suffix<input name="nameSuffix"></label>
           <label>Highest degree<input name="highestDegree"></label>
           <label>Field of study<input name="fieldOfStudy"></label>
+          <label>University<input name="university"></label>
           <label>German level<input name="germanLevel"></label>
           <label>English level<input name="englishLevel"></label>
           <label>Availability date<input name="availabilityDate" type="date"></label>
+          <label>Notice period or start date<input name="noticePeriodOrStartDate"></label>
           <label>Work authorization<input name="workAuthorization"></label>
+          <label>Location preference 1<input name="locationPreference1"></label>
+          <label>Location preference 2<input name="locationPreference2"></label>
+          <label>Travel readiness<input name="travelReadiness"></label>
+          <label>Salary expectation<input name="salaryExpectation"></label>
           <label class="checkbox"><input name="requiresSponsorship" type="checkbox"> Requires sponsorship</label>
+        </section>
+
+        <section>
+          <h2>Optional Sensitive Fields</h2>
+          <label>Birth date<input name="birthDate" type="date"></label>
+          <label>
+            Gender
+            <select name="gender">
+              <option value="">Not stored</option>
+              <option value="Female">Female</option>
+              <option value="Male">Male</option>
+              <option value="Diverse">Diverse</option>
+              <option value="Prefer not to say">Prefer not to say</option>
+            </select>
+          </label>
+          <label>Nationality<input name="nationality"></label>
+          <label>
+            Talent pool consent
+            <select name="talentPoolConsent">
+              <option value="">Not stored</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </label>
+          <label>
+            Disability / equal-status field
+            <select name="disabilityStatus">
+              <option value="">Not stored</option>
+              <option value="No">No</option>
+              <option value="Yes">Yes</option>
+              <option value="Prefer not to say">Prefer not to say</option>
+            </select>
+          </label>
         </section>
 
         <section>
@@ -157,4 +203,3 @@
     <script src="options.js"></script>
   </body>
 </html>
-

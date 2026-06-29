@@ -11,16 +11,35 @@
     lastName: "Last name",
     email: "Email",
     phone: "Phone",
+    phoneCountryCode: "Phone country code",
+    phoneLocalNumber: "Phone local number",
+    streetAddress: "Street address",
+    postalCode: "Postal code",
     city: "City",
     country: "Country",
     linkedin: "LinkedIn",
+    title: "Title",
+    nameSuffix: "Name suffix",
     highestDegree: "Highest degree",
     fieldOfStudy: "Field of study",
+    university: "University",
     germanLevel: "German level",
     englishLevel: "English level",
     availabilityDate: "Availability date",
+    noticePeriodOrStartDate: "Notice period or start date",
     workAuthorization: "Work authorization",
-    requiresSponsorship: "Visa sponsorship"
+    requiresSponsorship: "Visa sponsorship",
+    birthDate: "Birth date",
+    gender: "Gender",
+    nationality: "Nationality",
+    locationPreference1: "Location preference 1",
+    locationPreference2: "Location preference 2",
+    travelReadiness: "Travel readiness",
+    salaryExpectation: "Salary expectation",
+    talentPoolConsent: "Talent pool consent",
+    disabilityStatus: "Disability / equal status",
+    resumeUpload: "Resume upload",
+    certificateUpload: "Certificate upload"
   };
 
   function replaceStatus(...nodes) {
@@ -72,6 +91,10 @@
 
     if (mapping.reason === "field already has a value") {
       return "skipped: already has value";
+    }
+
+    if (mapping.reason === "manual upload required") {
+      return "manual upload required";
     }
 
     if (mapping.reason === "profile value is empty") {
@@ -223,8 +246,27 @@
           const detector = globalThis.JobApplicationFieldDetector;
           const detections = detector.detectFields(document);
 
+          function getProfileValue(profileField) {
+            const fallbackFields = {
+              phone: ["phone", "phoneLocalNumber"],
+              phoneLocalNumber: ["phoneLocalNumber", "phone"],
+              availabilityDate: ["availabilityDate", "noticePeriodOrStartDate"],
+              noticePeriodOrStartDate: ["noticePeriodOrStartDate", "availabilityDate"]
+            };
+
+            for (const fieldName of fallbackFields[profileField] || [profileField]) {
+              const value = currentProfile[fieldName];
+
+              if (typeof value === "boolean" || (value !== null && value !== undefined && String(value).trim() !== "")) {
+                return value;
+              }
+            }
+
+            return "";
+          }
+
           function hasProfileValue(profileField) {
-            const value = currentProfile[profileField];
+            const value = getProfileValue(profileField);
             return typeof value === "boolean" || (value !== null && value !== undefined && String(value).trim() !== "");
           }
 
@@ -258,9 +300,12 @@
             .map((detection) => {
               const hasProfile = hasProfileValue(detection.profileField);
               const hasCurrentValue = fieldHasValue(detection.element);
+              const inputType = detector.normalizeText(detection.element.getAttribute("type") || detection.element.type || "");
               let status = "fillable";
 
-              if (!hasProfile) {
+              if (inputType === "file") {
+                status = "manual upload required";
+              } else if (!hasProfile) {
                 status = "skipped: no profile value";
               } else if (hasCurrentValue) {
                 status = "skipped: already has value";
