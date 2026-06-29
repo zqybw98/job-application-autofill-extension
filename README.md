@@ -15,9 +15,11 @@ The core design choice is local-first and review-first: profile data stays in Ch
 - User-triggered autofill from the extension popup
 - Local profile storage with `chrome.storage.local`
 - Field detection for English and German form labels
+- German ATS field coverage for address, split phone, language, location, salary, and notice-period fields
 - Readable detected-field output with labels, element types, confidence, and status
 - Local application dashboard for manual tracking
 - Manual test page and checklist
+- File upload fields are detected for reporting only
 - No auto-submit
 - No Gmail integration
 - No external API calls
@@ -54,6 +56,7 @@ Screenshots should use fake data only and should not show browser address bars, 
 - No Gmail, Google Drive, OpenAI, or third-party service access.
 - No automatic application submission.
 - File inputs are never filled programmatically.
+- Sensitive and legal fields are filled only when the user explicitly stores a local value.
 - No broad `host_permissions`; scripts are injected only after explicit user action.
 
 ## Installation
@@ -82,6 +85,7 @@ Use the local test page and checklist before testing on real application platfor
 
 - [Manual test checklist](docs/manual-test-checklist.md)
 - [Local test form](test/form.html)
+- [German ATS test form](test/german-ats-form.html)
 
 Manual testing covers profile persistence, detected-field output, autofill behavior, non-overwrite behavior, dashboard storage, and the no-auto-submit boundary.
 
@@ -94,6 +98,7 @@ Version `0.1.0` is an initial MVP. It focuses on safe local behavior, generic fi
 - Improve field detection output with more real-world test cases.
 - Add platform-specific adapters for Workday, Greenhouse, Lever, Personio, SmartRecruiters, and Ashby.
 - Add more manual test cases for common form patterns.
+- Keep file uploads manual and sensitive legal fields opt-in.
 - Improve dashboard filtering and editing.
 - Keep all sensitive automation opt-in and local-first.
 
@@ -129,6 +134,7 @@ job-application-autofill-extension/
       ashby.js
   test/
     form.html
+    german-ats-form.html
   examples/
     profile.example.json
   docs/

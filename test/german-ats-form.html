@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>German ATS Manual Test Form</title>
+  </head>
+  <body>
+    <main>
+      <h1>German ATS Manual Test Form</h1>
+      <p>This local page is for manual Chrome Extension testing only. Use fake profile data.</p>
+
+      <form action="#" method="post">
+        <fieldset>
+          <legend>Lebenslauf</legend>
+          <p>
+            <label for="resume-upload">Lade deinen Lebenslauf hoch</label><br>
+            <input id="resume-upload" name="resumeUpload" type="file">
+          </p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Kontaktinformationen</legend>
+
+          <p>
+            <label for="ats-first-name">Vorname</label><br>
+            <input id="ats-first-name" name="candidateFirstName" autocomplete="given-name">
+          </p>
+
+          <p>
+            <label for="ats-last-name">Nachname</label><br>
+            <input id="ats-last-name" name="candidateLastName" autocomplete="family-name">
+          </p>
+
+          <p>
+            <label for="ats-email">Private E-Mail</label><br>
+            <input id="ats-email" name="privateEmail" type="email" autocomplete="email">
+          </p>
+
+          <p>
+            <label for="ats-phone-country-code">Ländercode</label><br>
+            <select id="ats-phone-country-code" name="phoneCountryCode">
+              <option value="">Auswählen</option>
+              <option value="+49">+49 Germany</option>
+              <option value="+43">+43 Austria</option>
+              <option value="+41">+41 Switzerland</option>
+            </select>
+          </p>
+
+          <p>
+            <label for="ats-phone-local">Telefonnummer</label><br>
+            <input id="ats-phone-local" name="phoneLocalNumber" type="tel" autocomplete="tel-national">
+          </p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Dein Profil</legend>
+
+          <p>
+            <label for="ats-street">Straße und Hausnummer</label><br>
+            <input id="ats-street" name="streetAddress" autocomplete="street-address">
+          </p>
+
+          <p>
+            <label for="ats-postal-code">Postleitzahl</label><br>
+            <input id="ats-postal-code" name="postalCode" autocomplete="postal-code">
+          </p>
+
+          <p>
+            <label for="ats-city">Stadt</label><br>
+            <input id="ats-city" name="city" autocomplete="address-level2" placeholder="Must be filled with Berlin, not Germany">
+          </p>
+
+          <p>
+            <label for="ats-country">Land</label><br>
+            <select id="ats-country" name="country" autocomplete="country-name">
+              <option value="">Auswählen</option>
+              <option value="Germany">Germany</option>
+              <option value="Austria">Austria</option>
+              <option value="Switzerland">Switzerland</option>
+            </select>
+          </p>
+
+          <p>
+            <span>Wähle eine Option:</span><br>
+            <label>
+              <input type="radio" name="talentPoolConsent" value="yes">
+              Ich möchte auf weitere offene Stellen geprüft werden.
+            </label><br>
+            <label>
+              <input type="radio" name="talentPoolConsent" value="no">
+              Ich möchte nur auf die Stelle geprüft werden, auf die ich mich beworben habe.
+            </label>
+          </p>
+
+          <p>
+            <label for="certificate-upload">Upload der Zeugnisse</label><br>
+            <input id="certificate-upload" name="certificateUpload" type="file">
+          </p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Weitere Angaben</legend>
+
+          <p>
+            <label for="ats-gender">Geschlecht</label><br>
+            <select id="ats-gender" name="gender">
+              <option value="">Auswählen</option>
+              <option value="Female">Female / weiblich</option>
+              <option value="Male">Male / männlich</option>
+              <option value="Diverse">Diverse</option>
+              <option value="Prefer not to say">Prefer not to say</option>
+            </select>
+          </p>
+
+          <p>
+            <label for="ats-title">Titel</label><br>
+            <select id="ats-title" name="title">
+              <option value="">Auswählen</option>
+              <option value="Dr.">Dr.</option>
+              <option value="Prof.">Prof.</option>
+            </select>
+          </p>
+
+          <p>
+            <label for="ats-name-suffix">Namenszusatz</label><br>
+            <select id="ats-name-suffix" name="nameSuffix">
+              <option value="">Auswählen</option>
+              <option value="Jr.">Jr.</option>
+              <option value="Sr.">Sr.</option>
+            </select>
+          </p>
+
+          <p>
+            <label for="ats-birth-date">Geburtsdatum</label><br>
+            <input id="ats-birth-date" name="birthDate" type="date">
+          </p>
+
+          <p>
+            <label for="ats-nationality">Nationalität</label><br>
+            <select id="ats-nationality" name="nationality">
+              <option value="">Auswählen</option>
+              <option value="German">German</option>
+              <option value="Other">Other</option>
+            </select>
+          </p>
+
+          <p>
+            <label for="ats-university">Hochschule</label><br>
+            <input id="ats-university" name="university" placeholder="Example University">
+          </p>
+
+          <p>
+            <label for="ats-location-1">Standortwahl Priorität 1</label><br>
+            <select id="ats-location-1" name="locationPreference1">
+              <option value="">Auswählen</option>
+              <option value="Berlin">Berlin</option>
+              <option value="Munich">Munich</option>
+              <option value="Frankfurt">Frankfurt</option>
+            </select>
+          </p>
+
+          <p>
+            <label for="ats-location-2">Standortwahl Priorität 2</label><br>
+            <select id="ats-location-2" name="locationPreference2">
+              <option value="">Auswählen</option>
+              <option value="Berlin">Berlin</option>
+              <option value="Munich">Munich</option>
+              <option value="Frankfurt">Frankfurt</option>
+            </select>
+          </p>
+
+          <p>
+            <label for="ats-german-level">Deutschkenntnisse</label><br>
+            <select id="ats-german-level" name="germanLevel">
+              <option value="">Auswählen</option>
+              <option value="A1">A1</option>
+              <option value="A2">A2</option>
+              <option value="B1">B1</option>
+              <option value="B2">B2</option>
+              <option value="C1">C1</option>
+              <option value="C2">C2</option>
+            </select>
+          </p>
+
+          <p>
+            <label for="ats-english-level">Englischkenntnisse</label><br>
+            <select id="ats-english-level" name="englishLevel">
+              <option value="">Auswählen</option>
+              <option value="A1">A1</option>
+              <option value="A2">A2</option>
+              <option value="B1">B1</option>
+              <option value="B2">B2</option>
+              <option value="C1">C1</option>
+              <option value="C2">C2</option>
+            </select>
+          </p>
+
+          <p>
+            <label for="ats-travel-readiness">Reisebereitschaft</label><br>
+            <select id="ats-travel-readiness" name="travelReadiness">
+              <option value="">Auswählen</option>
+              <option value="Yes">Yes / Ja</option>
+              <option value="No">No / Nein</option>
+            </select>
+          </p>
+
+          <p>
+            <label for="ats-start-or-notice">Gewünschter Starttermin oder Kündigungsfrist</label><br>
+            <input id="ats-start-or-notice" name="noticePeriodOrStartDate">
+          </p>
+
+          <p>
+            <label for="ats-salary">Erwartetes Jahresgehalt</label><br>
+            <input id="ats-salary" name="salaryExpectation">
+          </p>
+
+          <p>
+            <label for="ats-disability">Schwerbehinderung / Gleichstellung option</label><br>
+            <select id="ats-disability" name="disabilityStatus">
+              <option value="">Auswählen</option>
+              <option value="No">No / Nein</option>
+              <option value="Yes">Yes / Ja</option>
+              <option value="Prefer not to say">Prefer not to say</option>
+            </select>
+          </p>
+        </fieldset>
+
+        <p>
+          <button type="submit">Bewerbung manuell prüfen</button>
+        </p>
+      </form>
+    </main>
+  </body>
+</html>

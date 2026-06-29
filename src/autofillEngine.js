@@ -32,10 +32,67 @@
     return value !== null && value !== undefined && String(value).trim() !== "";
   }
 
+  function getProfileValue(profile, profileField) {
+    const fallbackFields = {
+      phone: ["phone", "phoneLocalNumber"],
+      phoneLocalNumber: ["phoneLocalNumber", "phone"],
+      availabilityDate: ["availabilityDate", "noticePeriodOrStartDate"],
+      noticePeriodOrStartDate: ["noticePeriodOrStartDate", "availabilityDate"]
+    };
+
+    for (const fieldName of fallbackFields[profileField] || [profileField]) {
+      const value = profile[fieldName];
+
+      if (hasProfileValue(value)) {
+        return value;
+      }
+    }
+
+    return "";
+  }
+
   function dispatchFormEvents(element) {
     for (const eventName of ["input", "change", "blur"]) {
       element.dispatchEvent(new Event(eventName, { bubbles: true }));
     }
+  }
+
+  function getValueChoices(value) {
+    if (typeof value === "boolean") {
+      return value ? ["yes", "true", "ja", "1"] : ["no", "false", "nein", "0"];
+    }
+
+    const normalizedValue = normalizeText(value);
+    const aliasGroups = {
+      yes: ["yes", "ja", "true", "1"],
+      ja: ["yes", "ja", "true", "1"],
+      no: ["no", "nein", "false", "0"],
+      nein: ["no", "nein", "false", "0"],
+      germany: ["germany", "deutschland"],
+      deutschland: ["germany", "deutschland"],
+      munich: ["munich", "munchen"],
+      munchen: ["munich", "munchen"],
+      female: ["female", "weiblich"],
+      weiblich: ["female", "weiblich"],
+      male: ["male", "mannlich"],
+      mannlich: ["male", "mannlich"],
+      diverse: ["diverse", "divers"],
+      divers: ["diverse", "divers"]
+    };
+
+    return aliasGroups[normalizedValue] || [normalizedValue];
+  }
+
+  function textMatchesChoice(text, choice) {
+    if (!text || !choice) {
+      return false;
+    }
+
+    if (text === choice || text.split(" ").includes(choice)) {
+      return true;
+    }
+
+    return choice.length > 2 && text.includes(choice);
   }
 
   function getRadioGroup(element) {
@@ -62,16 +119,8 @@
 
   function radioMatchesValue(element, value) {
     const optionText = getControlText(element);
-
-    if (typeof value === "boolean") {
-      const positiveTokens = ["yes", "true", "ja", "1"];
-      const negativeTokens = ["no", "false", "nein", "0"];
-      const tokens = value ? positiveTokens : negativeTokens;
-      return tokens.some((token) => optionText.split(" ").includes(token));
-    }
-
-    const normalizedValue = normalizeText(value);
-    return optionText.includes(normalizedValue) || normalizedValue.includes(optionText);
+    const choices = getValueChoices(value);
+    return choices.some((choice) => textMatchesChoice(optionText, choice));
   }
 
   function isNonEmpty(element) {
@@ -102,20 +151,11 @@
 
   function findSelectOption(element, value) {
     const options = Array.from(element.options || []);
-
-    if (typeof value === "boolean") {
-      const tokens = value ? ["yes", "true", "ja", "1"] : ["no", "false", "nein", "0"];
-      return options.find((option) => {
-        const optionText = normalizeText(`${option.value} ${option.textContent}`);
-        return tokens.some((token) => optionText.split(" ").includes(token));
-      });
-    }
-
-    const normalizedValue = normalizeText(value);
+    const choices = getValueChoices(value);
     const exactMatch = options.find((option) => {
       const optionValue = normalizeText(option.value);
       const optionText = normalizeText(option.textContent);
-      return optionValue === normalizedValue || optionText === normalizedValue;
+      return choices.some((choice) => optionValue === choice || optionText === choice);
     });
 
     if (exactMatch) {
@@ -125,7 +165,7 @@
     return options.find((option) => {
       const optionValue = normalizeText(option.value);
       const optionText = normalizeText(option.textContent);
-      return optionValue.includes(normalizedValue) || optionText.includes(normalizedValue);
+      return choices.some((choice) => textMatchesChoice(optionValue, choice) || textMatchesChoice(optionText, choice));
     });
   }
 
@@ -168,16 +208,16 @@
 
   function fillControl(detection, profile, settings) {
     const element = detection.element;
-    const value = profile[detection.profileField];
     const tagName = element.tagName.toLowerCase();
     const inputType = normalizeText(element.getAttribute("type") || element.type || "");
+    const value = getProfileValue(profile, detection.profileField);
+
+    if (inputType === "file") {
+      return { filled: false, reason: "manual upload required" };
+    }
 
     if (!hasProfileValue(value)) {
       return { filled: false, reason: "profile value is empty" };
-    }
-
-    if (inputType === "file") {
-      return { filled: false, reason: "file inputs are never filled" };
     }
 
     if (!settings.allowOverwrite && isNonEmpty(element)) {
@@ -248,4 +288,3 @@
     run
   };
 })();
-

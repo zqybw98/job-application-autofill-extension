@@ -8,6 +8,45 @@
   const CONTROL_SELECTOR = "input, textarea, select";
   const IGNORED_INPUT_TYPES = new Set(["button", "hidden", "image", "reset", "submit"]);
 
+  const STRONG_FIELD_MATCHERS = [
+    {
+      profileField: "phoneCountryCode",
+      patterns: [/\blandercode\b/, /\blaendercode\b/, /\bphonecountrycode\b/, /\bcountry\s*code\b/, /\btelefonvorwahl\b/, /\bvorwahl\b/]
+    },
+    {
+      profileField: "phoneLocalNumber",
+      patterns: [/\btelefonnummer\b/, /\bphonelocalnumber\b/, /\bphone\s*number\b/, /\blocal\s*number\b/]
+    },
+    {
+      profileField: "streetAddress",
+      patterns: [/\bstrasse\s*und\s*hausnummer\b/, /\bstreet\s*address\b/, /\baddress\s*line\b/]
+    },
+    {
+      profileField: "postalCode",
+      patterns: [/\bpostleitzahl\b/, /\bpostalcode\b/, /\bplz\b/, /\bpostal\s*code\b/, /\bzip\s*code\b/]
+    },
+    {
+      profileField: "city",
+      patterns: [/\bstadt\b/, /\bcity\b/, /\btown\b/, /\bwohnort\b/]
+    },
+    {
+      profileField: "country",
+      patterns: [/\bland\b/, /\bcountry\b/]
+    },
+    {
+      profileField: "locationPreference1",
+      patterns: [/\bstandortwahl\s*prioritat\s*1\b/, /\bstandortwahl\s*prioritaet\s*1\b/, /\bstandort\s*prioritat\s*1\b/, /\bstandort\s*prioritaet\s*1\b/, /\blocationpreference1\b/, /\bpreferred\s*location\s*1\b/]
+    },
+    {
+      profileField: "locationPreference2",
+      patterns: [/\bstandortwahl\s*prioritat\s*2\b/, /\bstandortwahl\s*prioritaet\s*2\b/, /\bstandort\s*prioritat\s*2\b/, /\bstandort\s*prioritaet\s*2\b/, /\blocationpreference2\b/, /\bpreferred\s*location\s*2\b/]
+    },
+    {
+      profileField: "disabilityStatus",
+      patterns: [/\bschwerbehinderung\b/, /\bgleichstellung\b/, /\bequal\s*status\b/, /\bdisability\b/]
+    }
+  ];
+
   const FIELD_MATCHERS = [
     {
       profileField: "firstName",
@@ -19,11 +58,27 @@
     },
     {
       profileField: "email",
-      patterns: [/\be-?mail\b/, /\bemail\s*address\b/]
+      patterns: [/\be-?mail\b/, /\be\s*mail\b/, /\bemail\s*address\b/, /\bprivate\s*e\s*mail\b/]
+    },
+    {
+      profileField: "phoneCountryCode",
+      patterns: [/\blandercode\b/, /\blaendercode\b/, /\bphonecountrycode\b/, /\bcountry\s*code\b/, /\btelefonvorwahl\b/, /\bvorwahl\b/]
+    },
+    {
+      profileField: "phoneLocalNumber",
+      patterns: [/\btelefonnummer\b/, /\bphonelocalnumber\b/, /\bphone\s*number\b/, /\blocal\s*number\b/]
     },
     {
       profileField: "phone",
       patterns: [/\bphone\b/, /\bmobile\b/, /\btelephone\b/, /\btelefon\b/, /\btelefonnummer\b/, /\bhandy\b/]
+    },
+    {
+      profileField: "streetAddress",
+      patterns: [/\bstrasse\b/, /\bhausnummer\b/, /\badresse\b/, /\bstreet\b/, /\baddress\b/]
+    },
+    {
+      profileField: "postalCode",
+      patterns: [/\bpostleitzahl\b/, /\bpostalcode\b/, /\bplz\b/, /\bpostal\s*code\b/, /\bzip\b/]
     },
     {
       profileField: "city",
@@ -46,6 +101,10 @@
       patterns: [/\bfield\s*of\s*study\b/, /\bstudy\s*field\b/, /\bmajor\b/, /\bstudienfach\b/, /\bfachrichtung\b/]
     },
     {
+      profileField: "university",
+      patterns: [/\bhochschule\b/, /\buniversity\b/, /\buniversitat\b/, /\buniversitaet\b/, /\bcollege\b/]
+    },
+    {
       profileField: "germanLevel",
       patterns: [/\bgerman\b/, /\bgerman\s*level\b/, /\bdeutsch\b/, /\bdeutschkenntnisse\b/]
     },
@@ -58,12 +117,68 @@
       patterns: [/\bavailable\s*from\b/, /\bavailability\b/, /\bstart\s*date\b/, /\bverfugbar\s*ab\b/, /\beintrittsdatum\b/]
     },
     {
+      profileField: "noticePeriodOrStartDate",
+      patterns: [/\bgewunschter\s*starttermin\b/, /\bgewuenschter\s*starttermin\b/, /\bkundigungsfrist\b/, /\bkuendigungsfrist\b/, /\bnoticeperiodorstartdate\b/, /\bnotice\s*period\b/, /\bstarttermin\b/]
+    },
+    {
       profileField: "workAuthorization",
       patterns: [/\bwork\s*authorization\b/, /\bright\s*to\s*work\b/, /\bwork\s*permit\b/, /\barbeitserlaubnis\b/, /\barbeitsberechtigung\b/]
     },
     {
       profileField: "requiresSponsorship",
       patterns: [/\bsponsorship\b/, /\bvisa\s*sponsorship\b/, /\bvisa\s*support\b/, /\bsponsor\b/, /\bvisum\s*sponsoring\b/]
+    },
+    {
+      profileField: "title",
+      patterns: [/\btitel\b/, /\bacademic\s*title\b/, /\bhonorific\b/]
+    },
+    {
+      profileField: "nameSuffix",
+      patterns: [/\bnamenszusatz\b/, /\bname\s*suffix\b/, /\bsuffix\b/]
+    },
+    {
+      profileField: "birthDate",
+      patterns: [/\bgeburtsdatum\b/, /\bdate\s*of\s*birth\b/, /\bbirth\s*date\b/]
+    },
+    {
+      profileField: "gender",
+      patterns: [/\bgeschlecht\b/, /\bgender\b/]
+    },
+    {
+      profileField: "nationality",
+      patterns: [/\bnationalitat\b/, /\bnationalitaet\b/, /\bstaatsangehorigkeit\b/, /\bstaatsangehoerigkeit\b/, /\bnationality\b/]
+    },
+    {
+      profileField: "locationPreference1",
+      patterns: [/\bstandortwahl\s*prioritat\s*1\b/, /\bstandortwahl\s*prioritaet\s*1\b/, /\bstandort\s*prioritat\s*1\b/, /\bstandort\s*prioritaet\s*1\b/, /\blocationpreference1\b/, /\bpreferred\s*location\s*1\b/]
+    },
+    {
+      profileField: "locationPreference2",
+      patterns: [/\bstandortwahl\s*prioritat\s*2\b/, /\bstandortwahl\s*prioritaet\s*2\b/, /\bstandort\s*prioritat\s*2\b/, /\bstandort\s*prioritaet\s*2\b/, /\blocationpreference2\b/, /\bpreferred\s*location\s*2\b/]
+    },
+    {
+      profileField: "travelReadiness",
+      patterns: [/\breisebereitschaft\b/, /\btravelreadiness\b/, /\btravel\s*readiness\b/, /\bwillingness\s*to\s*travel\b/]
+    },
+    {
+      profileField: "salaryExpectation",
+      patterns: [/\berwartetes\s*jahresgehalt\b/, /\bgehaltsvorstellung\b/, /\bsalaryexpectation\b/, /\bsalary\s*expectation\b/, /\bexpected\s*salary\b/]
+    },
+    {
+      profileField: "talentPoolConsent",
+      patterns: [/\btalentpoolconsent\b/, /\btalent\s*pool\b/, /\bweitere\s*offene\s*stellen\b/, /\bnur\s*auf\s*die\s*stelle\b/, /\bgepruft\s*werden\b/, /\bgeprueft\s*werden\b/]
+    },
+    {
+      profileField: "disabilityStatus",
+      patterns: [/\bschwerbehinderung\b/, /\bgleichstellung\b/, /\bequal\s*status\b/, /\bdisability\b/]
+    },
+    {
+      profileField: "resumeUpload",
+      patterns: [/\blebenslauf\b/, /\bcv\b/, /\bresume\b/]
+    },
+    {
+      profileField: "certificateUpload",
+      patterns: [/\bzeugnisse\b/, /\bzertifikat\b/, /\bcertificate\b/]
     }
   ];
 
@@ -72,6 +187,7 @@
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase()
+      .replace(/ß/g, "ss")
       .replace(/[_-]+/g, " ")
       .replace(/[^\w\s@.+/]/g, " ")
       .replace(/\s+/g, " ")
@@ -169,17 +285,13 @@
     };
   }
 
-  function findBestMatch(normalizedText) {
+  function findPatternMatch(matchers, normalizedText, baseScore, maxBonus) {
     let bestMatch = null;
 
-    if (!normalizedText) {
-      return null;
-    }
-
-    for (const matcher of FIELD_MATCHERS) {
+    for (const matcher of matchers) {
       for (const pattern of matcher.patterns) {
         if (pattern.test(normalizedText)) {
-          const score = 0.72 + Math.min(pattern.source.length / 120, 0.2);
+          const score = baseScore + Math.min(pattern.source.length / 120, maxBonus);
 
           if (!bestMatch || score > bestMatch.confidence) {
             bestMatch = {
@@ -192,6 +304,17 @@
     }
 
     return bestMatch;
+  }
+
+  function findBestMatch(normalizedText) {
+    if (!normalizedText) {
+      return null;
+    }
+
+    return (
+      findPatternMatch(STRONG_FIELD_MATCHERS, normalizedText, 0.9, 0.08) ||
+      findPatternMatch(FIELD_MATCHERS, normalizedText, 0.72, 0.2)
+    );
   }
 
   function isSupportedControl(element) {
@@ -269,4 +392,3 @@
     serializeDetection
   };
 })();
-
